@@ -12,7 +12,7 @@
             <li>Дата: {{ post.date }}</li>
             <li>Категория: <a href="/category/{{ post.category }}">{{ post.category }}</a></li>
         </ul>
-        <p>{{ post.text|slice:":20" }}...</p> <!-- Показать первые 20 символов текста -->
+        <p>{{ post.text|truncatewords:10 }}...</p>
         <a href="/posts/{{ post.id }}/">Читать полный текст</a>
     </article>
     <hr>

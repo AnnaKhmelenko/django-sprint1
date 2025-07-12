@@ -1,4 +1,6 @@
-from django.shortcuts import render  # type: ignore
+from django.http import Http404
+from django.shortcuts import render
+
 from textwrap import dedent
 
 posts = [
@@ -44,16 +46,21 @@ posts = [
     },
 ]
 
+# Cловарь для быстрого доступа к постам по id
+posts_dict = {post['id']: post for post in posts}
+
 
 def index(request):
     reversed_posts = list(reversed(posts))
     return render(request, 'blog/index.html', {'posts': reversed_posts})
 
 
-def post_detail(request, id):
-    post = next((post for post in posts if post['id'] == id), None)
-    if post:
-        post['text'] = dedent(post['text'])
+def post_detail(request, post_id):
+    post = posts_dict.get(post_id)
+    if not post:
+        raise Http404('Пост не найден')
+    post = post.copy()  # Чтобы не менять исходный словарь
+    post['text'] = dedent(post['text'])
     return render(request, 'blog/detail.html', {'post': post})
 
 
